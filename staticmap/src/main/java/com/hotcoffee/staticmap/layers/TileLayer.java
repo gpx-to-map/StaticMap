@@ -39,8 +39,7 @@ public abstract class TileLayer implements Layer {
 
     public static double latitudeFromTile(int y, int z) {
         final double latRadians = StrictMath.PI - (2.0 * StrictMath.PI) * y / (1 << z);
-        final double latitude = StrictMath.atan(StrictMath.exp(latRadians)) / StrictMath.PI * 360.0 - 90.0;
-        return latitude;
+        return StrictMath.atan(StrictMath.exp(latRadians)) / StrictMath.PI * 360.0 - 90.0;
     }
 
     public static int tileXFromLongitude(double lon, int z) {
@@ -50,8 +49,7 @@ public abstract class TileLayer implements Layer {
     public static int tileYFromLatitude(double lat, int z) {
         final double alpha = Math.toRadians(lat);
 
-        final int tileY = (int) StrictMath.floor((float) ((1.0 - StrictMath.log((StrictMath.sin(alpha) + 1.0) / StrictMath.cos(alpha)) / StrictMath.PI) * 0.5 * (1 << z)));
-        return tileY;
+        return (int) StrictMath.floor((float) ((1.0 - StrictMath.log((StrictMath.sin(alpha) + 1.0) / StrictMath.cos(alpha)) / StrictMath.PI) * 0.5 * (1 << z)));
     }
 
     // === Static methods ===

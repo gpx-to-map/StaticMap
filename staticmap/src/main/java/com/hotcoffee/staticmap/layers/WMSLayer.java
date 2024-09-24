@@ -34,8 +34,6 @@ public class WMSLayer extends TMSLayer {
     protected String mHost;
     protected String[] mLayers;
     protected String mFilter;
-    private final boolean mIsPNG = true;
-    private final boolean mIsTransparent = true;
     private final int mMinZoom = 4;
     private StaticMap mMapPicture;
 
@@ -55,13 +53,13 @@ public class WMSLayer extends TMSLayer {
 
         MercatorProjection proj = mMapPicture.getProjection();
 
-        String pattern = "";
-        pattern += mHost;
-        pattern += "?service=WMS&version=1.1.1&request=GetMap&Layers=";
+        StringBuilder pattern = new StringBuilder();
+        pattern.append(mHost);
+        pattern.append("?service=WMS&version=1.1.1&request=GetMap&Layers=");
         for (int i = 0; i < mLayers.length; i++) {
-            pattern += mLayers[i];
+            pattern.append(mLayers[i]);
             if (i < mLayers.length - 1)
-                pattern += ",";
+                pattern.append(",");
         }
 
         // Compute locations corners.
@@ -80,15 +78,15 @@ public class WMSLayer extends TMSLayer {
                 topLeftLocation.getLatitude(),
                 bottomRightLocation.getLatitude());
 
-        pattern += "&Styles=&SRS=EPSG:4326";
-        pattern += "&BBOX=" + bounds.xmin + "," + bounds.ymax + "," + bounds.xmax + "," + bounds.ymin;
-        pattern += "&width=" + proj.getTileSize();
-        pattern += "&height=" + proj.getTileSize();
-        pattern += (mIsPNG) ? "&format=image/png" : "&format=image/jpg";
-        pattern += "&TRANSPARENT=" + ((mIsTransparent) ? "TRUE" : "FALSE");
-        pattern += (mFilter == null) ? "" : "&cql_Filter=" + mFilter;
+        pattern.append("&Styles=&SRS=EPSG:4326");
+        pattern.append("&BBOX=").append(bounds.xmin).append(",").append(bounds.ymax).append(",").append(bounds.xmax).append(",").append(bounds.ymin);
+        pattern.append("&width=").append(proj.getTileSize());
+        pattern.append("&height=").append(proj.getTileSize());
+        pattern.append("&format=image/png");
+        pattern.append("&TRANSPARENT=" + "TRUE");
+        pattern.append((mFilter == null) ? "" : "&cql_Filter=" + mFilter);
 
-        return pattern;
+        return pattern.toString();
 
     }
 

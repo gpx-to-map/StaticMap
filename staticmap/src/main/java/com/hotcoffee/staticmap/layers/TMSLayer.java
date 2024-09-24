@@ -35,12 +35,10 @@ public class TMSLayer extends TileLayer {
 
     @Override
     public Image getTile(int tileX, int tileY, int tileZ) {
-
         try {
             String buildedUrl = buildURL(tileX, tileY, tileZ);
             URL url = new URL(buildedUrl);
-            Image image = ImageIO.read(url);
-            return image;
+            return ImageIO.read(url);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

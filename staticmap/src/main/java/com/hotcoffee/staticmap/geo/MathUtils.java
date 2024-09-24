@@ -22,11 +22,11 @@ package com.hotcoffee.staticmap.geo;
  */
 class MathUtils {
 
-    static final double deg2rad(double deg) {
+    static double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
 
-    static final double rad2deg(double rad) {
+    static double rad2deg(double rad) {
         return (rad * 180 / Math.PI);
     }
 

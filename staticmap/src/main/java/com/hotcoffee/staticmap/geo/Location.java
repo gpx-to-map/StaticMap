@@ -36,26 +36,21 @@ public class Location {
 
     public static float distanceBetween(double lat1, double lon1, double lat2, double lon2/*, char unit*/) {
         double theta = lon1 - lon2;
-        double dist = Math.sin(MathUtils.deg2rad(lat1)) * Math.sin(MathUtils.deg2rad(lat2)) + Math.cos(MathUtils.deg2rad(lat1)) * Math.cos(MathUtils.deg2rad(lat2)) * Math.cos(MathUtils.deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = MathUtils.rad2deg(dist);
-        dist = dist * 60 * 1.1515 * 1609.344;
-
-        /*if (unit == 'K') {
-            dist = dist * 1.609344;
-        }
-        else if (unit == 'N') {
-            dist = dist * 0.8684;
-        }*/
-
-        float floatdist = (float) dist;
-
+        float floatdist = getFloatdist(lat1, lat2, theta);
         if (Float.isNaN(floatdist) || Float.isInfinite(floatdist)) {
             //Log.i("GeoUtils", "Result of distanceBetween NaN or infinite for lat1="+lat1+ " lon1="+lon1+" lat2="+lat2 + " lon2="+lon2);
             return 0;
         } else {
             return floatdist;
         }
+    }
+
+    private static float getFloatdist(double lat1, double lat2, double theta) {
+        double dist = Math.sin(MathUtils.deg2rad(lat1)) * Math.sin(MathUtils.deg2rad(lat2)) + Math.cos(MathUtils.deg2rad(lat1)) * Math.cos(MathUtils.deg2rad(lat2)) * Math.cos(MathUtils.deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = MathUtils.rad2deg(dist);
+        dist = dist * 60 * 1.1515 * 1609.344;
+        return (float) dist;
     }
 
     public double getLatitude() {

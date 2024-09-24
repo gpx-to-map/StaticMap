@@ -38,9 +38,7 @@ public class LocationBounds {
             double ymin = Double.parseDouble(parsed[1]);
             double xmax = Double.parseDouble(parsed[2]);
             double ymax = Double.parseDouble(parsed[3]);
-            LocationBounds bbox = new LocationBounds(xmin, xmax, ymin, ymax);
-
-            return bbox;
+            return new LocationBounds(xmin, xmax, ymin, ymax);
         } catch (NumberFormatException pee) {
             return null;
         }
@@ -49,9 +47,10 @@ public class LocationBounds {
     /**
      * Creates a BBOX that wraps a specified LatLng, with an area in meters around the point.
      *
-     * @distance The distance, in meters
+     * @param distance The distance, in
+     *
      */
-    public static LocationBounds enveloppe(Location latLng, long distance) {
+    public static LocationBounds wrap(Location latLng, long distance) {
 
         LocationBounds bbox = new LocationBounds(0, 0, 0, 0);
 
@@ -118,9 +117,7 @@ public class LocationBounds {
                 minlat, maxlon) / 1000;
         double bboxheight = Location.distanceBetween(minlat, minlon,
                 maxlat, minlon) / 1000;
-        double bboxarea = bboxwidth * bboxheight;
-
-        return bboxarea;
+        return bboxwidth * bboxheight;
     }
 
     /**

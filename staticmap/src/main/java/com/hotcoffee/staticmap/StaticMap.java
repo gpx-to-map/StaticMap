@@ -22,7 +22,9 @@ import com.hotcoffee.staticmap.geo.LocationBounds;
 import com.hotcoffee.staticmap.geo.PointF;
 import com.hotcoffee.staticmap.geo.projection.MercatorProjection;
 import com.hotcoffee.staticmap.layers.Layer;
+import com.hotcoffee.staticmap.layers.TMSLayer;
 import com.hotcoffee.staticmap.layers.TileLayer;
+import com.hotcoffee.staticmap.layers.WMSLayer;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -136,8 +138,7 @@ public class StaticMap {
         Location loc = new Location(lat, lng);
         PointF pt = getProjection().unproject(loc, zoom);
 
-        PointF offsetDone = new PointF(pt.x - offset.x, pt.y - offset.y);
-        return offsetDone;
+        return new PointF(pt.x - offset.x, pt.y - offset.y);
     }
 
     /**
@@ -149,8 +150,7 @@ public class StaticMap {
         // Offset the point for computation.
         final PointF thePoint = new PointF(pt.x + offset.x, pt.y + offset.y);
 
-        Location result = getProjection().project(thePoint, zoom);
-        return result;
+        return getProjection().project(thePoint, zoom);
     }
 
     /**
@@ -225,7 +225,7 @@ public class StaticMap {
 
     /**
      * Adds a {@link Layer} onto the map. The layer will be drawn from the first to the last.
-     * For instance, you can add any {@link BaseMapType}, {@link TMS} or {@link WMSMapType}
+     * For instance, you can add any {@link Layer}, {@link TMSLayer} or {@link WMSLayer}
      * object.
      */
     public void addLayer(Layer layer) {
@@ -234,7 +234,7 @@ public class StaticMap {
 
     /**
      * Inserts a {@link Layer} onto the map at the specified index. The layer will be drawn from the first to the last.
-     * For instance, you can add any {@link BaseMapType}, {@link TMSLayer} or {@link WMSMapType}
+     * For instance, you can add any {@link Layer}, {@link TMSLayer} or {@link WMSLayer}
      * object.
      */
     public void insertLayer(Layer layer, int index) {
@@ -354,10 +354,7 @@ public class StaticMap {
         int centerImageX = mWidth / 2;
         int centerImageY = mHeight / 2;
 
-        PointF pixels = new PointF(centerPixels.x - centerImageX,
+        return new PointF(centerPixels.x - centerImageX,
                 centerPixels.y - centerImageY);
-
-        return pixels;
     }
-
 }
