@@ -17,9 +17,6 @@
  */
 package com.hotcoffee.staticmap.geo;
 
-/**
- * @author Christophe
- */
 public record Location(double mLatitude,
                        double mLongitude) {
 
@@ -27,7 +24,6 @@ public record Location(double mLatitude,
         double theta = lon1 - lon2;
         float floatdist = getFloatdist(lat1, lat2, theta);
         if (Float.isNaN(floatdist) || Float.isInfinite(floatdist)) {
-            //Log.i("GeoUtils", "Result of distanceBetween NaN or infinite for lat1="+lat1+ " lon1="+lon1+" lat2="+lat2 + " lon2="+lon2);
             return 0;
         } else {
             return floatdist;

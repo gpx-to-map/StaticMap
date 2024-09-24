@@ -50,7 +50,7 @@ public class LocationBounds {
      * @param distance The distance, in
      *
      */
-    public static LocationBounds wrap(Location latLng, long distance) {
+    public static LocationBounds getBounds(Location latLng, long distance) {
 
         LocationBounds bbox = new LocationBounds(0, 0, 0, 0);
 
