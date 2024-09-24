@@ -64,16 +64,16 @@ public class Marker implements Layer {
         System.out.println("width: " + width + ", height: " + height);
 
         PointF base = mp.getProjection().unproject(mLocation, mp.getZoom());
-        PointF origin = new PointF(base.x - mp.getOffset().x, base.y - mp.getOffset().y);
+        PointF origin = new PointF(base.x() - mp.getOffset().x(), base.y() - mp.getOffset().y());
 
         BufferedImage rotated = getRotatedImage(mRotation, mImage);
 
-        int anchorX = (int) (mAnchor.x);
-        int anchorY = (int) (mAnchor.y);
+        int anchorX = (int) (mAnchor.x());
+        int anchorY = (int) (mAnchor.y());
 
         graphics.drawImage(rotated,
-                (int) (origin.x - anchorX),
-                (int) (origin.y - anchorY),
+                (int) (origin.x() - anchorX),
+                (int) (origin.y() - anchorY),
                 width,
                 height,
                 null);

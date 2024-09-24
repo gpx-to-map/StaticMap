@@ -68,15 +68,15 @@ public class WMSLayer extends TMSLayer {
         Location topLeftLocation = new Location(lat, lon);
 
         PointF topLeftCorner = proj.unproject(topLeftLocation, tileZ);
-        PointF bottomRightCorner = new PointF(topLeftCorner.x + proj.getTileSize(),
-                topLeftCorner.y + proj.getTileSize());
+        PointF bottomRightCorner = new PointF(topLeftCorner.x() + proj.getTileSize(),
+                topLeftCorner.y() + proj.getTileSize());
         Location bottomRightLocation = proj.project(bottomRightCorner, tileZ);
 
         LocationBounds bounds = new LocationBounds(
-                topLeftLocation.getLongitude(),
-                bottomRightLocation.getLongitude(),
-                topLeftLocation.getLatitude(),
-                bottomRightLocation.getLatitude());
+                topLeftLocation.mLongitude(),
+                bottomRightLocation.mLongitude(),
+                topLeftLocation.mLatitude(),
+                bottomRightLocation.mLatitude());
 
         pattern.append("&Styles=&SRS=EPSG:4326");
         pattern.append("&BBOX=").append(bounds.xmin).append(",").append(bounds.ymax).append(",").append(bounds.xmax).append(",").append(bounds.ymin);

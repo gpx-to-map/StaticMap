@@ -20,19 +20,8 @@ package com.hotcoffee.staticmap.geo;
 /**
  * @author Christophe
  */
-public class Location {
-
-    public double mLatitude;
-    public double mLongitude;
-
-    public Location(double lat, double lon) {
-        this.mLatitude = lat;
-        this.mLongitude = lon;
-    }
-
-    public Location(String geolives) {
-
-    }
+public record Location(double mLatitude,
+                       double mLongitude) {
 
     public static float distanceBetween(double lat1, double lon1, double lat2, double lon2/*, char unit*/) {
         double theta = lon1 - lon2;
@@ -52,35 +41,4 @@ public class Location {
         dist = dist * 60 * 1.1515 * 1609.344;
         return (float) dist;
     }
-
-    public double getLatitude() {
-        return this.mLatitude;
-    }
-
-    public void setLatitude(double lat) {
-        this.mLatitude = lat;
-    }
-
-    public double getLongitude() {
-        return this.mLongitude;
-    }
-
-    public void setLongitude(double lon) {
-        this.mLongitude = lon;
-    }
-
-    public double getAltitude() {
-        return 0;
-    }
-
-    public void setAltitude(double alt) {
-
-    }
-
-    @Override
-    public String toString() {
-        return "{" + this.mLatitude + "," + this.mLongitude + "}";
-    }
-
-
 }

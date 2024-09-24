@@ -5,9 +5,6 @@
  */
 package com.hotcoffee.staticmap.layers;
 
-/**
- * @author cbrasseur
- */
 public abstract class Control implements Layer {
 
     public enum Position {

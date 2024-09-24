@@ -17,10 +17,11 @@
  */
 package com.hotcoffee.staticmap.geo;
 
-/**
- * @author Admin
- */
 class MathUtils {
+
+    private MathUtils() {
+        throw new IllegalStateException("Utility class");
+    }
 
     static double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);

@@ -17,22 +17,5 @@
  */
 package com.hotcoffee.staticmap.geo;
 
-/**
- * @author Christophe
- */
-public final class PointF {
-    public double x;
-    public double y;
-
-    public PointF(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    @Override
-    public String toString() {
-        return "{x: " + this.x + ", y: " + this.y + "}";
-    }
-
-
+public record PointF(double x, double y) {
 }

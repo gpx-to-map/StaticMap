@@ -5,9 +5,6 @@
  */
 package com.hotcoffee.staticmap.layers.components;
 
-/**
- * @author Christophe
- */
-public class Polygon {
+public record Polygon() {
 
 }

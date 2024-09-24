@@ -138,7 +138,7 @@ public class StaticMap {
         Location loc = new Location(lat, lng);
         PointF pt = getProjection().unproject(loc, zoom);
 
-        return new PointF(pt.x - offset.x, pt.y - offset.y);
+        return new PointF(pt.x() - offset.x(), pt.y() - offset.y());
     }
 
     /**
@@ -148,7 +148,7 @@ public class StaticMap {
         final PointF offset = getOffset();
 
         // Offset the point for computation.
-        final PointF thePoint = new PointF(pt.x + offset.x, pt.y + offset.y);
+        final PointF thePoint = new PointF(pt.x() + offset.x(), pt.y() + offset.y());
 
         return getProjection().project(thePoint, zoom);
     }
@@ -313,16 +313,16 @@ public class StaticMap {
             PointF rp = computeRatioPixels(baseZoom);
 
             // Compute?
-            PointF topLeftPixels = new PointF(0 + rp.x,
-                    0 + rp.y);
+            PointF topLeftPixels = new PointF(0 + rp.x(),
+                    0 + rp.y());
             Location topLeftLocation = mp.project(topLeftPixels, baseZoom);
 
-            PointF bottomRightPixels = new PointF(mWidth + rp.x,
-                    mHeight + rp.y);
+            PointF bottomRightPixels = new PointF(mWidth + rp.x(),
+                    mHeight + rp.y());
             Location bottomRightLocation = mp.project(bottomRightPixels, baseZoom);
 
             // Test if in bounds
-            LocationBounds bboxCalculation = new LocationBounds(topLeftLocation.mLongitude, bottomRightLocation.mLongitude, topLeftLocation.mLatitude, bottomRightLocation.mLatitude);
+            LocationBounds bboxCalculation = new LocationBounds(topLeftLocation.mLongitude(), bottomRightLocation.mLongitude(), topLeftLocation.mLatitude(), bottomRightLocation.mLatitude());
 
             System.out.println("Trying with " + baseZoom + "...");
             System.out.println(" - " + bboxCalculation);
@@ -337,8 +337,8 @@ public class StaticMap {
         MercatorProjection proj = getProjection();
         int tileSize = proj.getTileSize();
 
-        int tileX = TileLayer.tileXFromLongitude(getLocation().mLongitude, zoom);
-        int tileY = TileLayer.tileYFromLatitude(getLocation().mLatitude, zoom);
+        int tileX = TileLayer.tileXFromLongitude(getLocation().mLongitude(), zoom);
+        int tileY = TileLayer.tileYFromLatitude(getLocation().mLatitude(), zoom);
         int tileZ = mZoom;
 
         // Which position for this tile ?
@@ -354,7 +354,7 @@ public class StaticMap {
         int centerImageX = mWidth / 2;
         int centerImageY = mHeight / 2;
 
-        return new PointF(centerPixels.x - centerImageX,
-                centerPixels.y - centerImageY);
+        return new PointF(centerPixels.x() - centerImageX,
+                centerPixels.y() - centerImageY);
     }
 }

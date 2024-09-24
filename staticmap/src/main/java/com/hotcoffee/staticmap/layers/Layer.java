@@ -21,13 +21,10 @@ import com.hotcoffee.staticmap.StaticMap;
 
 import java.awt.*;
 
-/**
- * @author Christophe
- */
 public interface Layer {
 
     /**
-     * Proceed to draw of the layer. Must be overrided for child classes.
+     * Proceed to draw of the layer. Must be overridden by children classes.
      */
     void draw(Graphics2D graphics, StaticMap mp);
 

@@ -21,9 +21,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.net.URL;
 
-/**
- * @author Christophe
- */
 public class TMSLayer extends TileLayer {
     private static final String[] SUBDOMAINS = new String[]{"a", "b", "c"};
 

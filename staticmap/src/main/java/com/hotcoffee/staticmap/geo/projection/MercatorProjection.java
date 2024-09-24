@@ -28,34 +28,31 @@ public final class MercatorProjection implements GeographicalProjection<PointF> 
 
     @Override
     public PointF unproject(Location location, int zoom) {
-        double lat = location.getLatitude();
-        double lng = location.getLongitude();
+        double lat = location.mLatitude();
+        double lng = location.mLongitude();
 
-        PointF point = new PointF(0, 0);
-
-        point.x = _pixelOrigin.x + lng * _pixelsPerLonDegree;
+        double x = _pixelOrigin.x() + lng * _pixelsPerLonDegree;
 
         // Truncating to 0.9999 effectively limits latitude to 89.189. This is
         // about a third of a tile past the edge of the world tile.
-        double siny = bound(Math.sin(Math.toRadians(lat)), -0.9999, 0.9999);
-        point.y = _pixelOrigin.y + 0.5 * Math.log((1 + siny) / (1 - siny)) * -_pixelsPerLonRadian;
+        double siny = bound(Math.sin(Math.toRadians(lat)));
+        double y = _pixelOrigin.y() + 0.5 * Math.log((1 + siny) / (1 - siny)) * -_pixelsPerLonRadian;
 
         int numTiles = 1 << zoom;
-        point.x = point.x * numTiles;
-        point.y = point.y * numTiles;
-        return point;
+        x = x * numTiles;
+        y = y * numTiles;
+        return new PointF(x, y);
     }
 
     @Override
     public Location project(PointF pt, int zoom) {
-        PointF point = new PointF(pt.x, pt.y);
         int numTiles = 1 << zoom;
-        point.x = point.x / (double) numTiles;
-        point.y = point.y / (double) numTiles;
+        double x = pt.x() / (double) numTiles;
+        double y = pt.y() / (double) numTiles;
 
-        double lng = (point.x - _pixelOrigin.x) / _pixelsPerLonDegree;
+        double lng = (x - _pixelOrigin.x()) / _pixelsPerLonDegree;
 
-        double latRadians = (point.y - _pixelOrigin.y) / -_pixelsPerLonRadian;
+        double latRadians = (y - _pixelOrigin.y()) / -_pixelsPerLonRadian;
         double lat = Math.toDegrees(2 * Math.atan(Math.exp(latRadians)) - Math.PI / 2);
         return new Location(lat, lng);
     }
@@ -64,11 +61,8 @@ public final class MercatorProjection implements GeographicalProjection<PointF> 
         return _tileSize;
     }
 
-    double bound(double val, double valMin, double valMax) {
-        double res;
-        res = Math.max(val, valMin);
-        res = Math.min(val, valMax);
-        return res;
+    double bound(double val) {
+        return Math.min(val, 0.9999);
     }
 
 }

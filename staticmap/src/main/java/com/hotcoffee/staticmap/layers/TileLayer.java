@@ -52,8 +52,6 @@ public abstract class TileLayer implements Layer {
         return (int) StrictMath.floor((float) ((1.0 - StrictMath.log((StrictMath.sin(alpha) + 1.0) / StrictMath.cos(alpha)) / StrictMath.PI) * 0.5 * (1 << z)));
     }
 
-    // === Static methods ===
-
     /**
      * Returns the opacity of the layer, between 0 and 1.
      */
@@ -77,53 +75,53 @@ public abstract class TileLayer implements Layer {
         MercatorProjection proj = mp.getProjection();
         int tileSize = proj.getTileSize();
 
-        int tileX = tileXFromLongitude(mp.getLocation().getLongitude(), mp.getZoom());
-        int tileY = tileYFromLatitude(mp.getLocation().getLatitude(), mp.getZoom());
+        int tileX = tileXFromLongitude(mp.getLocation().mLongitude(), mp.getZoom());
+        int tileY = tileYFromLatitude(mp.getLocation().mLatitude(), mp.getZoom());
         int tileZ = mp.getZoom();
 
 
         // Get the top left point.
-        PointF topLeftPixels = new PointF(0 + mp.getOffset().x,
-                0 + mp.getOffset().y);
+        PointF topLeftPixels = new PointF(0 + mp.getOffset().x(),
+                0 + mp.getOffset().y());
         Location topLeftLocation = proj.project(topLeftPixels, mp.getZoom());
         Tile topLeftTile = new Tile(
-                tileXFromLongitude(topLeftLocation.getLongitude(), mp.getZoom()),
-                tileYFromLatitude(topLeftLocation.getLatitude(), mp.getZoom()),
+                tileXFromLongitude(topLeftLocation.mLongitude(), mp.getZoom()),
+                tileYFromLatitude(topLeftLocation.mLatitude(), mp.getZoom()),
                 mp.getZoom());
 
         // Get the bottom right point.
-        PointF bottomRightPixels = new PointF(mp.getWidth() + mp.getOffset().x,
-                mp.getHeight() + mp.getOffset().y);
+        PointF bottomRightPixels = new PointF(mp.getWidth() + mp.getOffset().x(),
+                mp.getHeight() + mp.getOffset().y());
         Location bottomRightLocation = proj.project(bottomRightPixels, mp.getZoom());
         Tile bottomRightTile = new Tile(
-                tileXFromLongitude(bottomRightLocation.getLongitude(), mp.getZoom()),
-                tileYFromLatitude(bottomRightLocation.getLatitude(), mp.getZoom()),
+                tileXFromLongitude(bottomRightLocation.mLongitude(), mp.getZoom()),
+                tileYFromLatitude(bottomRightLocation.mLatitude(), mp.getZoom()),
                 mp.getZoom());
 
         // Get the top left corner or the top left tile before looping.
-        double topLeftCornerLat = latitudeFromTile(topLeftTile.y, mp.getZoom());
-        double topLeftCornerLon = longitudeFromTile(topLeftTile.x, mp.getZoom());
+        double topLeftCornerLat = latitudeFromTile(topLeftTile.y(), mp.getZoom());
+        double topLeftCornerLon = longitudeFromTile(topLeftTile.x(), mp.getZoom());
         Location topLeftLoc = new Location(topLeftCornerLat, topLeftCornerLon);
         PointF topLeftCorner = proj.unproject(topLeftLoc, mp.getZoom());
 
         int i = 0, j = 0;
-        for (int y = topLeftTile.y; y <= bottomRightTile.y; y++) {
-            for (int x = topLeftTile.x; x <= bottomRightTile.x; x++) {
+        for (int y = topLeftTile.y(); y <= bottomRightTile.y(); y++) {
+            for (int x = topLeftTile.x(); x <= bottomRightTile.x(); x++) {
                 // Get the tile.
                 Image im = getTile(x, y, tileZ);
 
                 // Get the "true" pos.
-                PointF truePos = new PointF(topLeftCorner.x + (tileSize * i),
-                        topLeftCorner.y + (tileSize * j));
+                PointF truePos = new PointF(topLeftCorner.x() + (tileSize * i),
+                        topLeftCorner.y() + (tileSize * j));
 
                 // Get the pos.
-                PointF tilePos = new PointF(truePos.x - mp.getOffset().x,
-                        truePos.y - mp.getOffset().y);
+                PointF tilePos = new PointF(truePos.x() - mp.getOffset().x(),
+                        truePos.y() - mp.getOffset().y());
 
                 // Draw the tile.
                 graphics.drawImage(im,
-                        (int) tilePos.x,
-                        (int) tilePos.y,
+                        (int) tilePos.x(),
+                        (int) tilePos.y(),
                         tileSize,
                         tileSize,
                         null);

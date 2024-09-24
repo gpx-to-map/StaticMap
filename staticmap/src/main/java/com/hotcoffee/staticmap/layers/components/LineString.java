@@ -73,8 +73,8 @@ public class LineString implements Layer {
             Location l = mPath.getLocationAtIndex(i);
 
             PointF pixelsLocation = proj.unproject(l, mp.getZoom());
-            xPoints[i] = (int) (pixelsLocation.x - mp.getOffset().x);
-            yPoints[i] = (int) (pixelsLocation.y - mp.getOffset().y);
+            xPoints[i] = (int) (pixelsLocation.x() - mp.getOffset().x());
+            yPoints[i] = (int) (pixelsLocation.y() - mp.getOffset().y());
         }
 
         if (mOutlineWidth > 0) {

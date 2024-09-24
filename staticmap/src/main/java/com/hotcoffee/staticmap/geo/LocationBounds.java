@@ -54,7 +54,7 @@ public class LocationBounds {
 
         LocationBounds bbox = new LocationBounds(0, 0, 0, 0);
 
-        double[] llcenter = new double[]{latLng.mLatitude, latLng.mLongitude};
+        double[] llcenter = new double[]{latLng.mLatitude(), latLng.mLongitude()};
         double latitude = llcenter[0];
         double longitude = llcenter[1];
         double[] location1 = new double[]{latitude, longitude - 0.5};
@@ -124,8 +124,8 @@ public class LocationBounds {
      * Returns true if the <code>GLatLng</code> is contained inside this BBOX. False otherwise.
      */
     public boolean contains(Location latLng) {
-        double y = latLng.mLatitude;
-        double x = latLng.mLongitude;
+        double y = latLng.mLatitude();
+        double x = latLng.mLongitude();
 
         return y > ymin && y < ymax && x > xmin && x < xmax;
     }

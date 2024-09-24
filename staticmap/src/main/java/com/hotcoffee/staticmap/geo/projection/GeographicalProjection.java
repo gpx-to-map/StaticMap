@@ -9,9 +9,6 @@ package com.hotcoffee.staticmap.geo.projection;
 import com.hotcoffee.staticmap.StaticMap;
 import com.hotcoffee.staticmap.geo.Location;
 
-/**
- * @author cbrasseur
- */
 public interface GeographicalProjection<T> {
 
     /**
