@@ -1,11 +1,24 @@
 # Static Map Creator
-Customizable Static Image Map Generator
+
+## Important notice ⚠️
+
+This repo is a **fork** of the original [StaticMap](https://github.com/doubotis/StaticMap) project
+by [Christophe Brasseur](https://github.com/doubotis).
+The aim of this fork was to bump the project to a newer java version but more importantly to publish it to the Maven
+Central Repository to allow for a better experience when using the lib.
+All credits to the original authors for the conception and algorithms.
+
+## Customizable Static Image Map Generator
 
 This library manages the production of images for map vizualization in the Java language, using tiled maps.
 This could be used for creation of small "preview" pictures, or produce very big images, for printing for instance.
-**The nearest well-known example is the [Google Static Maps API](https://developers.google.com/maps/documentation/static-maps/?hl=fr). Basically, this library is able to generate the same-like images, except the tile source must be provided by yourself.**
+**The nearest well-known example is
+the [Google Static Maps API](https://developers.google.com/maps/documentation/static-maps/?hl=fr). Basically, this
+library is able to generate the same-like images, except the tile source must be provided by yourself.**
 
-**Additionnally, this library is _NOT_ a wrapper for Static Maps APIs (Bing, MapBox, Google, ...). The library will not request any services to make the map, he will make the map by itself, by requesting and assembling the map tiles from a tile service, like MapBox or OpenStreetMap tile services.**
+**Additionnally, this library is _NOT_ a wrapper for Static Maps APIs (Bing, MapBox, Google, ...). The library will not
+request any services to make the map, he will make the map by itself, by requesting and assembling the map tiles from a
+tile service, like MapBox or OpenStreetMap tile services.**
 
 Code reviewed and improved by Blake7
 
@@ -14,6 +27,7 @@ Code reviewed and improved by Blake7
 * **[TODO List](https://github.com/doubotis/StaticMap/wiki/TODO-List)**
 
 ### Features
+
 * From 8x8 to infinite map sizes (tested until 9933x7026, A1 page at 300dpi)
 * Includes TMS and WMS easy-to-use layers
 * Supports user-defined custom layers
@@ -25,7 +39,8 @@ Here's an exemple of what you can produce with this, small pictures first:
 ![Sample 1](https://github.com/doubotis/MapPictureGenerator/blob/master/samples/sample-1.png)
 ![Sample 2](https://github.com/doubotis/MapPictureGenerator/blob/master/samples/sample-2.png)
 
-*Tiles for picture 1 to are served from the OSM Topo Maps tile provider. Tiles for pictures 2 and 3 are served from the OSM Base Maps tile provider.*
+*Tiles for picture 1 to are served from the OSM Topo Maps tile provider. Tiles for pictures 2 and 3 are served from the
+OSM Base Maps tile provider.*
 
 Maybe you want bigger pictures?
 
@@ -37,23 +52,27 @@ Bigger and bigger. Superimpose TMs and WMS layers.
 
 ![Sample 4](https://github.com/doubotis/MapPictureGenerator/blob/master/samples/sample-4.png)
 
-*Tiles served from the OSM Base Maps tile provider, and dots served from the WMS Geolives S.A. Server Tile, displaying all public trails of the SityTrail community.*
+*Tiles served from the OSM Base Maps tile provider, and dots served from the WMS Geolives S.A. Server Tile, displaying
+all public trails of the SityTrail community.*
 
 **Supports any tile size with a very wide range of resolutions.
 The library was tested from 8x8 to 9933x7026 (A1 page, 300dpi) resolutions with good results.**
 
 ## Stability
+
 * Used for generating small static images in production environment since 2016, without problems.
 * Used for printing services in production environment since 2017, without problems.
 
 ## License
+
 [GNU Generic Public License](https://github.com/doubotis/MapPictureGenerator/blob/master/LICENSE)
 
 ## Quick Guide
 
 ### Installation
 
-1. Build the library by yourself or use this **[distribution jar](https://github.com/doubotis/MapPictureGenerator/blob/master/dist/StaticMap.jar)**.
+1. Build the library by yourself or use this *
+   *[distribution jar](https://github.com/doubotis/MapPictureGenerator/blob/master/dist/StaticMap.jar)**.
 2. Add the .jar to your project.
 
 ### Use the library
@@ -64,6 +83,7 @@ Create a `TMSLayer`to set the map tile provider source, then add it to the list 
 Finally, tell the library to draw the image into a file or into an output stream.
 
 Here's the final example:
+
 ```
 StaticMap mp = new StaticMap(pictureWidth, pictureHeight);
 TMSLayer baseMap = new TMSLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png");
@@ -76,18 +96,23 @@ mp.drawInto(new File(outPath));
 ### Additional features
 
 ###### fitBounds(bounds)
+
 Instead of setting the location and zoom, you can tell the `StaticMap` object to fit bounds.
+
 ```
 mp.fitBounds(new LocationBounds(xmin, xmax, ymin, ymax));
 ```
 
 ###### fitBounds(bounds, minZoom, maxZoom)
+
 You can tell the fit bounds method to limit the zoom range to min-max values.
+
 ```
 mp.fitBounds(new LocationBounds(xmin, xmax, ymin, ymax), minZoom, maxZoom);
 ```
 
 ###### Use of markers, linestring or polygons
+
 You can add a linestring by adding a `LocationPathLayer` to your `StaticMap` object.
 
 ```
@@ -97,6 +122,7 @@ staticMap.addLayer(layer);
 ```
 
 ###### Create your custom layer
+
 You can add yourself a custom layer by creating a class that implements `Layer`.
 
 ```
@@ -119,6 +145,7 @@ public class YourLayer implements Layer {
 ```
 
 Then add it to the `StaticMap` object.
+
 ```
 YourLayer layer = new YourLayer();
 staticMap.addLayer(layer);
