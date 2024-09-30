@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ibethus.staticmap</groupId>
     <artifactId>staticmap</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>staticmap</name>
     <url>https://github.com/ibethus/StaticMap</url>
     <description>

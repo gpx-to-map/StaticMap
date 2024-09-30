@@ -179,9 +179,24 @@ public class StaticMap {
         return mOffset;
     }
 
-    private void prepare(Graphics2D graphics) {
+    private void prepare() {
         mOffset = computeRatioPixels(getZoom());
+    }
 
+    private void proceedDraw(Graphics2D graphics) {
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+        graphics.setBackground(Color.WHITE);
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, mWidth, mHeight);
+        prepare();
+
+        for (Layer layer : mLayers) {
+            layer.draw(graphics, this);
+        }
     }
 
     private void proceedDraw() {
@@ -189,22 +204,7 @@ public class StaticMap {
                 BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D graphics = mImage.createGraphics();
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        graphics.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-        graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-
-        graphics.setBackground(Color.WHITE);
-        graphics.setColor(Color.WHITE);
-        graphics.fillRect(0, 0, mWidth, mHeight);
-
-        prepare(graphics);
-
-
-        for (Layer layer : mLayers) {
-            layer.draw(graphics, this);
-        }
+        proceedDraw(graphics);
     }
 
     /**
@@ -221,6 +221,16 @@ public class StaticMap {
     public void drawInto(OutputStream os) throws IOException {
         proceedDraw();
         ImageIO.write(mImage, "PNG", os);
+    }
+
+    /**
+     * Runs the drawing procedure on a given {@link Graphics2D}. This allows to draw
+     * more things on the {@link Graphics2D} later on.
+     *
+     * @param graphics2D any suitable {@link Graphics2D} object (eg. {@link BufferedImage})
+     */
+    public void drawInto(Graphics2D graphics2D) {
+        proceedDraw(graphics2D);
     }
 
     /**

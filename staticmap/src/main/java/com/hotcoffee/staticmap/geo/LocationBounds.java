@@ -17,6 +17,9 @@
  */
 package com.hotcoffee.staticmap.geo;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
 public class LocationBounds {
 
     public double xmax;
@@ -24,11 +27,49 @@ public class LocationBounds {
     public double ymax;
     public double ymin;
 
-    public LocationBounds(double xmi, double xma, double ymi, double yma) {
-        xmax = xma;
-        xmin = xmi;
-        ymax = yma;
-        ymin = ymi;
+    /**
+     * Creates a location bounds given the specified bounds
+     *
+     * @param xmin x smallest value
+     * @param xmax x biggest value
+     * @param ymin y smallest value
+     * @param ymax y biggest value
+     */
+    public LocationBounds(double xmin, double xmax, double ymin, double ymax) {
+        this.xmax = xmax;
+        this.xmin = xmin;
+        this.ymax = ymax;
+        this.ymin = ymin;
+    }
+
+    /**
+     * Creates a {@link LocationBounds} given a list of location. The bounds are automatically calculated.
+     *
+     * @param locations a {@link List} of {@link Location}
+     */
+    public LocationBounds(List<Location> locations) {
+        AtomicReference<Double> xmin = new AtomicReference<>();
+        AtomicReference<Double> xmax = new AtomicReference<>();
+        AtomicReference<Double> ymin = new AtomicReference<>();
+        AtomicReference<Double> ymax = new AtomicReference<>();
+        locations.forEach(location -> {
+            if (xmin.get() == null || location.mLongitude() < xmin.get()) {
+                xmin.set(location.mLongitude());
+            }
+            if (xmax.get() == null || location.mLongitude() > xmax.get()) {
+                xmax.set(location.mLongitude());
+            }
+            if (ymin.get() == null || location.mLatitude() < ymin.get()) {
+                ymin.set(location.mLatitude());
+            }
+            if (ymax.get() == null || location.mLatitude() > ymax.get()) {
+                ymax.set(location.mLatitude());
+            }
+        });
+        this.xmin = xmin.get();
+        this.xmax = xmax.get();
+        this.ymin = ymin.get();
+        this.ymax = ymax.get();
     }
 
     public static LocationBounds parseBBOX(String string) {
@@ -48,7 +89,6 @@ public class LocationBounds {
      * Creates a BBOX that wraps a specified LatLng, with an area in meters around the point.
      *
      * @param distance The distance, in
-     *
      */
     public static LocationBounds getBounds(Location latLng, long distance) {
 
