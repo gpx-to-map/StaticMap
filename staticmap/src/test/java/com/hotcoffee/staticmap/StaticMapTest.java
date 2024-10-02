@@ -1,6 +1,8 @@
 package com.hotcoffee.staticmap;
 
 
+import com.hotcoffee.staticmap.geo.LocationBounds;
+import com.hotcoffee.staticmap.layers.TMSLayer;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
