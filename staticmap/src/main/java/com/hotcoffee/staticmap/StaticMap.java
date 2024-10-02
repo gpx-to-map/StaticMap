@@ -21,10 +21,7 @@ import com.hotcoffee.staticmap.geo.Location;
 import com.hotcoffee.staticmap.geo.LocationBounds;
 import com.hotcoffee.staticmap.geo.PointF;
 import com.hotcoffee.staticmap.geo.projection.MercatorProjection;
-import com.hotcoffee.staticmap.layers.Layer;
-import com.hotcoffee.staticmap.layers.TMSLayer;
-import com.hotcoffee.staticmap.layers.TileLayer;
-import com.hotcoffee.staticmap.layers.WMSLayer;
+import com.hotcoffee.staticmap.layers.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -179,11 +176,11 @@ public class StaticMap {
         return mOffset;
     }
 
-    private void prepare() {
-        mOffset = computeRatioPixels(getZoom());
+    private void prepare(CenterOffset centerOffset) {
+        mOffset = computeRatioPixels(getZoom(), centerOffset);
     }
 
-    private void proceedDraw(Graphics2D graphics) {
+    private void proceedDraw(Graphics2D graphics, CenterOffset centerOffset) {
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         graphics.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
@@ -192,26 +189,26 @@ public class StaticMap {
         graphics.setBackground(Color.WHITE);
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, mWidth, mHeight);
-        prepare();
+        prepare(centerOffset);
 
         for (Layer layer : mLayers) {
             layer.draw(graphics, this);
         }
     }
 
-    private void proceedDraw() {
+    private void proceedDraw(CenterOffset centerOffset) {
         mImage = new BufferedImage(mWidth, mHeight,
                 BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D graphics = mImage.createGraphics();
-        proceedDraw(graphics);
+        proceedDraw(graphics, centerOffset);
     }
 
     /**
      * Runs the procedure of drawing. Stores the result into the specified {@link File}.
      */
     public void drawInto(File file) throws IOException {
-        proceedDraw();
+        proceedDraw(new CenterOffset(0, 0));
         ImageIO.write(mImage, "PNG", file);
     }
 
@@ -219,7 +216,7 @@ public class StaticMap {
      * Runs the procedure of drawing. Stores the result into the specified {@link OutputStream}.
      */
     public void drawInto(OutputStream os) throws IOException {
-        proceedDraw();
+        proceedDraw(new CenterOffset(0, 0));
         ImageIO.write(mImage, "PNG", os);
     }
 
@@ -229,8 +226,8 @@ public class StaticMap {
      *
      * @param graphics2D any suitable {@link Graphics2D} object (eg. {@link BufferedImage})
      */
-    public void drawInto(Graphics2D graphics2D) {
-        proceedDraw(graphics2D);
+    public void drawInto(Graphics2D graphics2D, CenterOffset centerOffset) {
+        proceedDraw(graphics2D, centerOffset);
     }
 
     /**
@@ -265,7 +262,7 @@ public class StaticMap {
      * and the specified bounds.
      */
     public void fitBounds(LocationBounds bounds) {
-        fitBoundsPadding(bounds, 3, 20, 0);
+        fitBounds(bounds, 3, 20, new Padding(0, 0, 0, 0));
     }
 
     /**
@@ -275,7 +272,7 @@ public class StaticMap {
      * You can specify a minimum and maximum zoom.
      */
     public void fitBounds(LocationBounds bounds, int minZoom, int maxZoom) {
-        fitBoundsPadding(bounds, minZoom, maxZoom, 0);
+        fitBounds(bounds, minZoom, maxZoom, new Padding(0, 0, 0, 0));
     }
 
     /**
@@ -287,8 +284,8 @@ public class StaticMap {
      * computing the right zoom, the padding will be taken in account in order to
      * not allowing space in each side, lower than this padding.
      */
-    public void fitBoundsPadding(LocationBounds bounds, int padding) {
-        fitBoundsPadding(bounds, 3, 20, padding);
+    public void fitBounds(LocationBounds bounds, Padding padding) {
+        fitBounds(bounds, 3, 20, padding);
     }
 
     /**
@@ -301,14 +298,13 @@ public class StaticMap {
      * not allowing space in each side, lower than this padding.<br/>
      * You can specify a minimum and maximum zoom.
      */
-    public void fitBoundsPadding(LocationBounds bounds, int minZoom, int maxZoom, int padding) {
+    public void fitBounds(LocationBounds bounds, int minZoom, int maxZoom, Padding padding) {
 
         // Find which zoom value to set.
         setLocation(bounds.getCenter());
-
         MercatorProjection mp = getProjection();
 
-        System.out.println("To fit: " + bounds);
+        System.out.println("Trying to fit: " + bounds);
 
         int baseZoom = maxZoom;
         boolean inBounds = false;
@@ -320,51 +316,37 @@ public class StaticMap {
                 break;
             }
 
-            PointF rp = computeRatioPixels(baseZoom);
+            PointF rp = computeRatioPixels(baseZoom, new CenterOffset(0, 0));
 
             // Compute?
-            PointF topLeftPixels = new PointF(0 + rp.x(),
-                    0 + rp.y());
+            PointF topLeftPixels = new PointF(0 + rp.x() + padding.left(), 0 + rp.y() + padding.top());
             Location topLeftLocation = mp.project(topLeftPixels, baseZoom);
 
-            PointF bottomRightPixels = new PointF(mWidth + rp.x(),
-                    mHeight + rp.y());
+            PointF bottomRightPixels = new PointF(mWidth + rp.x() + padding.bottom(),mHeight + rp.y() + padding.right());
             Location bottomRightLocation = mp.project(bottomRightPixels, baseZoom);
 
             // Test if in bounds
-            LocationBounds bboxCalculation = new LocationBounds(topLeftLocation.mLongitude(), bottomRightLocation.mLongitude(), topLeftLocation.mLatitude(), bottomRightLocation.mLatitude());
+            LocationBounds bboxCalculation = new LocationBounds(topLeftLocation.mLongitude(),
+                    bottomRightLocation.mLongitude(),
+                    topLeftLocation.mLatitude(),
+                    bottomRightLocation.mLatitude());
 
             System.out.println("Trying with " + baseZoom + "...");
             System.out.println(" - " + bboxCalculation);
             inBounds = bboxCalculation.contains(bounds, true);
         }
-
         mZoom = baseZoom;
-
     }
 
-    private PointF computeRatioPixels(int zoom) {
+    private PointF computeRatioPixels(int zoom, CenterOffset centerOffset) {
         MercatorProjection proj = getProjection();
-        int tileSize = proj.getTileSize();
-
-        int tileX = TileLayer.tileXFromLongitude(getLocation().mLongitude(), zoom);
-        int tileY = TileLayer.tileYFromLatitude(getLocation().mLatitude(), zoom);
-        int tileZ = mZoom;
-
-        // Which position for this tile ?
-        double tileLat = TileLayer.latitudeFromTile(tileY, tileZ);
-        double tileLon = TileLayer.longitudeFromTile(tileX, tileZ);
-
-        Location tileLoc = new Location(tileLat, tileLon);
-        PointF tilePixels = proj.unproject(tileLoc, tileZ);
-
         PointF centerPixels = proj.unproject(getLocation(), zoom);
 
         // Le centre en 824, 539 est l'équivalent de 100,100 sur l'image.
         int centerImageX = mWidth / 2;
         int centerImageY = mHeight / 2;
 
-        return new PointF(centerPixels.x() - centerImageX,
-                centerPixels.y() - centerImageY);
+        return new PointF(centerPixels.x() - centerImageX + centerOffset.x(),
+                centerPixels.y() - centerImageY + centerOffset.y());
     }
 }
