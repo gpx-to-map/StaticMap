@@ -21,6 +21,7 @@ import com.hotcoffee.staticmap.geo.Location;
 import com.hotcoffee.staticmap.geo.LocationBounds;
 import com.hotcoffee.staticmap.geo.PointF;
 import com.hotcoffee.staticmap.geo.projection.MercatorProjection;
+import com.hotcoffee.staticmap.layers.CenterOffset;
 import com.hotcoffee.staticmap.layers.Layer;
 import com.hotcoffee.staticmap.layers.Padding;
 import com.hotcoffee.staticmap.layers.TMSLayer;
