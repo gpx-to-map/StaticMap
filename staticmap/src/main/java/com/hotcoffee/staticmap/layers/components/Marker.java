@@ -85,10 +85,6 @@ public class Marker implements Layer {
         int width = source.getWidth(null);
         int height = source.getHeight(null);
 
-        // Get size of rotated rectangle.
-        int newWidth = width * 2;
-        int newHeight = height * 2;
-
         AffineTransform at = new AffineTransform();
 
         int middleX = (width / 2)/* - width / 2*/;

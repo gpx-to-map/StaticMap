@@ -18,11 +18,15 @@
 package com.hotcoffee.staticmap.layers;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
+import java.net.URI;
 import java.net.URL;
+import java.util.Random;
 
 public class TMSLayer extends TileLayer {
     private static final String[] SUBDOMAINS = new String[]{"a", "b", "c"};
+    private static final Random RANDOM = new Random();
 
     protected String mPattern;
 
@@ -34,7 +38,7 @@ public class TMSLayer extends TileLayer {
     public Image getTile(int tileX, int tileY, int tileZ) {
         try {
             String buildedUrl = buildURL(tileX, tileY, tileZ);
-            URL url = new URL(buildedUrl);
+            URL url = new URI(buildedUrl).toURL();
             return ImageIO.read(url);
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,7 +49,7 @@ public class TMSLayer extends TileLayer {
 
     protected String buildURL(int tileX, int tileY, int tileZ) {
         String pattern = mPattern;
-        int subDomainRandom = (int) (Math.random() * SUBDOMAINS.length);
+        int subDomainRandom = RANDOM.nextInt() * SUBDOMAINS.length;
         pattern = pattern.replace("{s}", SUBDOMAINS[subDomainRandom]);
         pattern = pattern.replace("{x}", "" + tileX);
         pattern = pattern.replace("{y}", "" + tileY);

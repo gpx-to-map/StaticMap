@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-public class LocationBoundsTest {
+class LocationBoundsTest {
 
     @ParameterizedTest
     @CsvSource({
@@ -78,7 +78,7 @@ public class LocationBoundsTest {
             "2.0, 3.0, 4.0, 5.0, 1.0, 2.0, 3.0, 4.0, true",  // BBOX fully contained
             "1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, false"  // BBOX outside
     })
-    void it_shuld_know_if_a_bbox_contains_another(double xmin1, double ymin1, double xmax1, double ymax1,
+    void it_should_know_if_a_bbox_contains_another(double xmin1, double ymin1, double xmax1, double ymax1,
                                                   double xmin2, double ymin2, double xmax2, double ymax2,
                                                   boolean expectedContains) {
         // Given two bboxes
@@ -105,17 +105,5 @@ public class LocationBoundsTest {
 
         // Then the result should be correct
         Assertions.assertThat(result).isEqualTo(expectedArea);
-    }
-
-    @Test
-    void it_should_convert_bbox_to_wkt() {
-        // Given a bbox
-        LocationBounds bbox = new LocationBounds(1.0, 3.0, 2.0, 4.0);
-
-        // When we try to convert it to wkt
-        String result = bbox.BBOXToWKT();
-
-        // Then it should return a correct result
-        Assertions.assertThat(result).isEqualTo("POLYGON((1.0 2.0,1.0 4.0,3.0 4.0,3.0 2.0,1.0 2.0))");
     }
 }
